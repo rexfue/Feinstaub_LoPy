@@ -20,6 +20,10 @@ import binascii
 MQTT_HOST='rexfue.de'
 MQTT_TOPIC='/Feinstaub/raspi_Z/'
 
+APP_EUI = '70B3D57EF00035E1'
+APP_KEY = '06EBFE2A87576DC832F3C93FD2699BC9'
+
+
 SDS_REPEAT_TIME = 60            # alle 60 sec messen
 SDS_WARMUP = 10                 # 10 Sekunden War,up für den SDS
 SDS_MEASURE = 15                # dann 5sec (== 5mal) messen
@@ -156,8 +160,8 @@ pycom.heartbeat(False)
 lora = LoRa(mode=LoRa.LORAWAN)
 
 # Set network keys
-app_eui = binascii.unhexlify('70B3D57EF00035E1')
-app_key = binascii.unhexlify('06EBFE2A87576DC832F3C93FD2699BC9')
+app_eui = binascii.unhexlify(APP_EUI)
+app_key = binascii.unhexlify(APP_KEY)
 
 # Join the network
 print("Try to Join Network ....")
