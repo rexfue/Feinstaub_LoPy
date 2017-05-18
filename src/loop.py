@@ -6,7 +6,7 @@ Created on 23 Apr 2017
 import time
 import machine
 import bme280
-from umqtt import MQTTClient
+# from umqtt import MQTTClient
 from network import WLAN
 import sds011
 from machine import I2C
@@ -14,14 +14,19 @@ import pycom
 import socket
 from network import LoRa
 import binascii
+from network import WLAN
+import ssd1306
 
 
 # Globale KONSTANTEN
 MQTT_HOST='rexfue.de'
 MQTT_TOPIC='/Feinstaub/raspi_Z/'
 
+########################
+# Put in Your Keys here
+########################
 APP_EUI = '70B3D57EF00035E1'
-APP_KEY = '06EBFE2A87576DC832F3C93FD2699BC9'
+APP_KEY = '341F7017AED80026F3DD729FC16B18A0'
 
 
 SDS_REPEAT_TIME = 60            # alle 60 sec messen
@@ -41,52 +46,6 @@ temp = 0
 humi = 0
 press = 0
 
-#def settimeout(duration):
-#    pass#
-#
-# Connect to WiFi
-#wlan = WLAN(mode=WLAN.STA)
-#wlan.antenna(WLAN.EXT_ANT)
-#wlan.connect("Mizar", auth=(WLAN.WPA2, "RingNebelM57"), timeout=5000)
-#
-#while not wlan.isconnected():
-#     machine.idle()
-#
-#print("Connected to Wifi\n")
-#
-#client = MQTTClient('rxf','castor',port=1883)
-#client.settiemout = settimeout
-#client.connect
-#
-#print("connectet to Broker")
-
-#def on_connect(client, userdata, flags, rc):
-#    print("Connected with result code " + str(rc))
-
-
-# SDS-Werte ainlesen
-#def readSDSvalues():
-#    ''' Einlesen '''
-#    global ser
-#    
-#    rcv = ser.read(10)
-#    if rcv[0] != 170 and rcv[1] != 192:
-#        ser.flushInput()
-#        rcv = ser.read(10)
-#    i = 0
-#    chksm = 0
-#    while i < 10:
-#        print(format(rcv[i],'02x'),end='')
-#        if i >= 2 and i <= 7:
-#            chksm = (chksm + rcv[i]) & 255
-#        i = i+1
-#    print()    
-#    if chksm != rcv[8]:
-#        print("*** Checksum-Fehler")
-#        return -1,-1
-#    pm25 = rcv[3]*256+rcv[2]
-#    pm10 = rcv[5]*256+rcv[4]
-#    return pm10,pm25
     
 def doSDS(tick):
     ''' SDS nun beackern: einlesen, nach 5 mal Mittelwert bilden '''
@@ -125,22 +84,27 @@ def sendData():
     print('Temperatur: ',temp)
     print('Feuchte: ',humi)
     print('Druck (local): ', press)
-
-#    werte = '{"temperature":"'+temp + \
-#        '", "humidity":"' + humi + \
-#        '", "pressure":"' + press + \
-#        '", "SDS_P10":"{:.2f}"'.format(SDS_P10) + ', "SDS_P2.5":"{:0.2f}"'.format(SDS_P25) + \
-#        "}" 
-#    client.publish(MQTT_TOPIC, werte)
-
-#    print("publishing: ",MQTT_TOPIC,werte)
-#    return werte
-
+    display("P10  "+str(SDS_P10),0,0,True)
+    display("P25  "+str(SDS_P25),0,12,False)
+    display("T    "+str(temp),0,28,False)
+    display("F    "+str(humi),0,40,False)
+    display("P    "+str(press),0,52,False)
     
 
+def display(txt,x,y,clear):
+    ''' Display Text on OLED '''
+    if clear:
+        oled.fill(0)
+    oled.text(txt,x,y)
+    oled.show()
+    
+        
+    
 i2c = I2C(0,)
 
 bme = bme280.BME280(i2c=i2c)
+
+oled = ssd1306.SSD1306_I2C(128,64,i2c)
 
 waitTime = 0
 SDStickCnt = 0
@@ -163,10 +127,16 @@ lora = LoRa(mode=LoRa.LORAWAN)
 app_eui = binascii.unhexlify(APP_EUI)
 app_key = binascii.unhexlify(APP_KEY)
 
+# Switch OFF WLAN
+#print("Disable WLAN");
+#wlan = WLAN()
+#wlan.deinit()
+
 # Join the network
 print("Try to Join Network ....")
 lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
 pycom.rgbled(red)
+display("Joining LoRa ...",0,0,True)
 
 # Loop until joined
 while not lora.has_joined():
@@ -177,27 +147,16 @@ while not lora.has_joined():
     time.sleep(2)
 
 print('Joined')
+display("Joined !", 0,20,False)
+
+display("Wait 1 min ..",0,40,False)
+
 pycom.rgbled(blue)
 
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5)
 s.setblocking(True)
 
-
-#print("Start um "+ time.localtime())
-
-#   client.on_connect = on_connect
-
-#  client.username_pw_set('feinstaub', 'hPafdF66a')
-# client.connect(MQTT_HOST, 1883, 60)
-#  mac = get_mac();
-#  print( hex(mac))
-
-#    macx = str(hex(mac));
-#    topic = MQTT_TOPIC
-#    topic = topic.replace('Z',macx[-9:-1])
-
-#    client.loop_start()
 
 startTimer = int(round(time.time()))
 
