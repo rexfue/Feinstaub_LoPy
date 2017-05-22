@@ -16,32 +16,27 @@ def readSDSvalues():
         n = ser.any()
         if n == 0:
             continue
-#        print (n)
         if n > 10:
             ser.read(n)
             continue
         rcv = ser.read(10)
-#        print('Len: ',len(rcv))
         if len(rcv) != 10:
-        	continue
+            continue
         if rcv[0] != 170 and rcv[1] != 192:
             print("try to sychronize")
             continue
-#       print ("found start")
         i = 0
         chksm = 0
         while i < 10:
-#            print(hex(rcv[i]))
             if i >= 2 and i <= 7:
                 chksm = (chksm + rcv[i]) & 255
             i = i+1
-#            print()    
         if chksm != rcv[8]:
             print("*** Checksum-Fehler")
             return -1,-1
-        pm25 = (rcv[3]*256+rcv[2])/10
-        pm10 = (rcv[5]*256+rcv[4])/10
-        return pm10,pm25
+        pm25 = (rcv[3]*256+rcv[2])
+        pm10 = (rcv[5]*256+rcv[4])
+        return pm10,pm25                    # values are in 0.1 resolution
         
 # SDS anhalten bzw starten
 def startstopSDS(was):
