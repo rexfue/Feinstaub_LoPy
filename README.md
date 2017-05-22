@@ -4,7 +4,7 @@ Feinstaub messen mit LoPy
 Im Moment ist die Software für den Anschluss von einem SDS011, einem BME280 (I2C) und einem Display SSD1306 (I2C) ausgelegt.
 Falls kein Display oder kein BME angeschlossen wird, muss im Source-File *loop.py* folgende Variablen auf False gesetzt werden:
 ```
-use_sds1306 = False
+use_ssd1306 = False
 use_bme280 = False
 ```
 
