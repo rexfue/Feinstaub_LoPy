@@ -2,7 +2,11 @@
 Feinstaub messen mit LoPy
 
 Im Moment ist die Software für den Anschluss von einem SDS011, einem BME280 (I2C) und einem Display SSD1306 (I2C) ausgelegt.
-Falls kein Display oder kein BME angeschlossen wird, muss im Source-File *loop.py* die Variable use_ssd1306 bzw. use_bme280 auf False gesetzt werden.
+Falls kein Display oder kein BME angeschlossen wird, muss im Source-File *loop.py* folgende Variablen auf False gesetzt werden:
+```
+use_sds1306 = False
+use_bme280 = False
+```
 
 Die eigenen Applkation-Keys für das TTN-Netz befinden sich in der Datei *appkeys.py* und haben folgendes Format:
 ```
