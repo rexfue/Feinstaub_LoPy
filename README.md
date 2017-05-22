@@ -5,8 +5,8 @@ Im Moment ist die Software für den Anschluss von einem SDS011, einem BME280 (I2
 Falls kein Display oder kein BME angeschlossen wird, muss im Source-File *loop.py* die Variable use_ssd1306 bzw. use_bme280 auf False gesetzt werden.
 
 Die eigenen Applkation-Keys für das TTN-Netz befinden sich in der Datei *appkeys.py* und haben folgendes Format:
-> APP_EUI = '0001020304050607'
-> APP_KEY = '000102030405060708090A0B0C0D0E0F’
+    APP_EUI = '0001020304050607'
+    APP_KEY = '000102030405060708090A0B0C0D0E0F’
 
 Die Datei *appkeys.py* **muss** erstellt werden.
 
