@@ -26,7 +26,7 @@ Folgende Dateien aus dem Git müssen zum LoPy übertragen werden (da dann in das
 
 Eigentlich sollte das Alles gewesen sein.
 
-Wenn der USB-Anschluß vom LoPy am Rechner steckt, so kann über ein Terminal-Prgramm (MacOs: screen, Windows: putty, Linux: minicom) etwas Debug-Info
+Wenn der USB-Anschluß vom LoPy am Rechner steckt, so kann über ein Terminal-Programm (MacOs: screen, Windows: putty, Linux: minicom) etwas Debug-Info
 mitgelesen werden. Die Baudrate steht auf 115200.
 
 Grundeinrichtung des LoPy und Einzelheiten zum MicroPython sind bei https://docs.pycom.io/pycom_esp32/index.html in den diversen Docs und Beginner Guides nachzulesen.
